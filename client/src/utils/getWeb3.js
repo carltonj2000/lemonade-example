@@ -35,4 +35,27 @@ const getWeb3 = () =>
     });
   });
 
-export default getWeb3;
+const getAccounts = async web3 => {
+  try {
+    const accounts = await web3.eth.getAccounts();
+    return accounts;
+  } catch (e) {
+    alert("Error! Failed getting accounts. Check console for details.");
+    console.error(e);
+  }
+};
+
+const getContract = async (web3, contract) => {
+  try {
+    const networkId = await web3.eth.net.getId();
+    const deployedNetwork = contract.networks[networkId];
+    return new web3.eth.Contract(
+      contract.abi,
+      deployedNetwork && deployedNetwork.address
+    );
+  } catch (e) {
+    alert("Error! Failed getting contract. Check console for details.");
+    console.error(e);
+  }
+};
+export { getWeb3, getAccounts, getContract };

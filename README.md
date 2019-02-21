@@ -1,6 +1,7 @@
 # Lemonade
 
-Started with `truffle unbox react` and code add from the
+Started with `truffle unbox react` and code add from the Udacity
+[Blockchain Nanodegree](https://www.udacity.com/course/blockchain-developer-nanodegree--nd1309).
 
 ## Command Referece
 
