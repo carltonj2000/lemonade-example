@@ -24,19 +24,18 @@ function SimpleStore(props) {
   return (
     <div className="App">
       <h1>Simple Storage</h1>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          contract.methods.set(newValue).send({ from: props.accounts[0] });
-        }}
-      >
-        <label>Store Value:</label>
-        <input
-          type="text"
-          onChange={e => newValueSet(parseInt(e.target.value))}
-        />
-        <input type="submit" value="submit" />
-      </form>
+      <label>Store Value:</label>
+      <input
+        type="text"
+        onChange={e => newValueSet(parseInt(e.target.value))}
+      />
+      <input
+        type="submit"
+        value="submit"
+        onClick={() =>
+          contract.methods.set(newValue).send({ from: props.accounts[0] })
+        }
+      />
       <div>The stored value is: {storageValue}</div>
     </div>
   );
