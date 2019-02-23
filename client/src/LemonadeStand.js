@@ -12,26 +12,33 @@ function LemonadeStand(props) {
   const [nameIn, nameInSet] = useState("");
   const [priceIn, priceInSet] = useState("");
   const [availableIn, availableInSet] = useState("");
-  //const [subscription, subscriptionSet] = useState(null);
+  const [error, errorSet] = useState(null);
 
   const runExample = async () => {
-    const c = await getContract(props.web3, LemonadeStandContract);
-    if (!c) return;
-    c.events.ForSale((e, r) => {
-      if (e) {
-        console.error(e);
-        return alert("ForSale event failed. Check console for details.");
-      }
-      if (r) console.log("ForSale event", r);
-    });
-    c.events.Sold((e, r) => {
-      if (e) {
-        console.error(e);
-        return alert("Sold event failed. Check console for details.");
-      }
-      if (r) console.log("Sold event", r);
-    });
-    contractSet(c);
+    try {
+      errorSet("Error Lemonade Stand Contract loading failed!");
+      const c = await getContract(props.web3, LemonadeStandContract);
+      contractSet(c);
+      errorSet("Error Lemonade Stand Contract access failed!");
+      await c.methods.owner().call(); // test contract access
+      errorSet(null);
+      c.events.ForSale((e, r) => {
+        if (e) {
+          console.error(e);
+          return alert("ForSale event failed. Check console for details.");
+        }
+        if (r) console.log("ForSale event", r);
+      });
+      c.events.Sold((e, r) => {
+        if (e) {
+          console.error(e);
+          return alert("Sold event failed. Check console for details.");
+        }
+        if (r) console.log("Sold event", r);
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
@@ -68,6 +75,8 @@ function LemonadeStand(props) {
       });
   };
   if (!contract) return <div>Loading contract ...</div>;
+  if (error)
+    return <div>{error}. Incorrect network or not deployed contract.</div>;
   return (
     <div className="App">
       <h1>Lemonade Stand</h1>

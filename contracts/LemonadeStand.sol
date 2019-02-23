@@ -1,7 +1,7 @@
 pragma solidity ^0.4.25;
 
 contract LemonadeStand {
-    address owner;
+    address public owner;
     uint skuCount;
     enum State { ForSale, Sold }
     struct Item {

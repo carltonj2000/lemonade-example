@@ -6,14 +6,20 @@ function SimpleStore(props) {
   const [newValue, newValueSet] = useState(0);
   const [storageValue, storageValueSet] = useState(0);
   const [contract, contractSet] = useState(null);
+  const [error, errorSet] = useState(null);
 
   const runExample = async () => {
-    const c = await getContract(props.web3, SimpleStorageContract);
-    if (!c) return;
-    contractSet(c);
-    //await contract.methods.set(5).send({ from: accounts[0] });
-    const storeVal = await c.methods.get().call();
-    storageValueSet(storeVal);
+    try {
+      errorSet("Error Simple Storage Contract loading failed!");
+      const c = await getContract(props.web3, SimpleStorageContract);
+      contractSet(c);
+      errorSet("Error Simple Storage Contract access failed!");
+      const storeVal = await c.methods.get().call();
+      errorSet(null);
+      storageValueSet(storeVal);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
@@ -21,6 +27,8 @@ function SimpleStore(props) {
   }, [props.web3, props.accounts]);
 
   if (!contract) return <div>Loading contract ...</div>;
+  if (error)
+    return <div>{error}. Incorrect network or not deployed contract.</div>;
   return (
     <div className="App">
       <h1>Simple Storage</h1>

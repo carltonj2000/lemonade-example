@@ -22,7 +22,7 @@ class App extends Component {
 
   render() {
     const { web3, accounts } = this.state;
-    if (!web3) return <div>Loading Web3 And Accounts ...</div>;
+    if (!web3 || !accounts) return <div>Loading Web3 And Accounts ...</div>;
     return (
       <Fragment>
         <SimpleStore web3={web3} accounts={accounts} />
