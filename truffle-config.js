@@ -10,6 +10,11 @@ module.exports = {
     }
   },
   networks: {
+    truffledevelop: {
+      host: "localhost",
+      port: 9545,
+      network_id: "*" // Match any network id
+    },
     ganachecli: {
       host: "localhost",
       port: 8545,

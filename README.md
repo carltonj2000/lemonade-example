@@ -9,6 +9,8 @@ Started with `truffle unbox react` and code add from the Udacity
   - `compile`
   - `test`
   - `migrate`
+  - `migrate --compile-all --reset`
   - `ContractName.deployed().then(inst => app = inst)`
   - `app.function()`
+- `truffle migrate --compile-all --reset --network ganachegui`
 - `cd client && yarn start`

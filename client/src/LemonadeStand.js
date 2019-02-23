@@ -12,10 +12,25 @@ function LemonadeStand(props) {
   const [nameIn, nameInSet] = useState("");
   const [priceIn, priceInSet] = useState("");
   const [availableIn, availableInSet] = useState("");
+  //const [subscription, subscriptionSet] = useState(null);
 
   const runExample = async () => {
     const c = await getContract(props.web3, LemonadeStandContract);
     if (!c) return;
+    c.events.ForSale((e, r) => {
+      if (e) {
+        console.error(e);
+        return alert("ForSale event failed. Check console for details.");
+      }
+      if (r) console.log("ForSale event", r);
+    });
+    c.events.Sold((e, r) => {
+      if (e) {
+        console.error(e);
+        return alert("Sold event failed. Check console for details.");
+      }
+      if (r) console.log("Sold event", r);
+    });
     contractSet(c);
   };
 
@@ -30,7 +45,7 @@ function LemonadeStand(props) {
   };
   const fetchItem = () => {
     contract.methods
-      .fetchItem(parseInt(sku))
+      .fetchItem(sku)
       .call()
       .then(item => {
         console.log(item);
@@ -44,7 +59,7 @@ function LemonadeStand(props) {
   };
   const buyItem = () => {
     contract.methods
-      .buyItem(parseInt(sku))
+      .buyItem(sku)
       .send({ from: props.accounts[0], value: pricePurchase })
       .then(r => console.log(r))
       .catch(e => {
@@ -64,7 +79,7 @@ function LemonadeStand(props) {
       <input type="submit" value="Fetch Item" onClick={fetchItem} />
       <input type="submit" value="Buy Item" onClick={buyItem} />
       <label>SKU:</label>
-      <input type="text" onChange={e => skuSet(e.target.value)} />
+      <input type="text" onChange={e => skuSet(parseInt(e.target.value))} />
       <label>Purchase Price:</label>
       <input
         type="text"
