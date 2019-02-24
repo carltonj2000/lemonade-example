@@ -3,7 +3,7 @@ pragma solidity ^0.4.25;
 contract LemonadeStand {
     address public owner;
     uint skuCount;
-    enum State { ForSale, Sold }
+    enum State { ForSale, Sold, Shipped }
     struct Item {
         string name;
         uint sku;
@@ -16,7 +16,8 @@ contract LemonadeStand {
     mapping (uint => Item) items;
 
     event ForSale(uint skuCount);
-    event Sold(uint sku);
+    event Sold(uint sku, uint change);
+    event Shipped(uint sku);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "must be owner");
@@ -66,10 +67,19 @@ contract LemonadeStand {
         uint price = items[sku].price;
         items[sku].buyer = buyer;
         items[sku].state = State.Sold;
+        uint change = msg.value - price;
         items[sku].seller.transfer(price);
-        emit Sold(sku);
+        items[sku].buyer.transfer(change);
+        emit Sold(sku, change);
     }
 
+
+    function shipItem(uint sku) 
+        public sold(sku) verifyCaller(items[sku].seller) {
+        items[sku].state = State.Shipped;
+        emit Shipped(sku);
+    }
+    
     function fetchItem(uint _sku) public view returns (string name, uint sku, 
         uint price, string stateIs, address seller, address buyer) {
         name = items[_sku].name;

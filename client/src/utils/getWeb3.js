@@ -38,6 +38,7 @@ const getWeb3 = () =>
 const getAccounts = async web3 => {
   try {
     const accounts = await web3.eth.getAccounts();
+    web3.eth.defaultAccount = accounts[0];
     return accounts;
   } catch (e) {
     alert("Error! Failed getting accounts. Check console for details.");
